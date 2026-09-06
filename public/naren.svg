@@ -1,0 +1,7 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="480" height="640" viewBox="0 0 480 640">
+  <rect width="480" height="640" fill="#f0ece8"/>
+  <rect x="160" y="120" width="160" height="160" rx="80" fill="#d8cfc8"/>
+  <rect x="100" y="340" width="280" height="200" rx="20" fill="#d8cfc8"/>
+  <text x="240" y="560" font-family="Georgia,serif" font-size="22" font-weight="700" fill="#c0a882" text-anchor="middle">Naren S J</text>
+  <text x="240" y="590" font-family="Georgia,serif" font-size="13" fill="#a09a95" text-anchor="middle">AI Engineer &amp; Software Builder</text>
+</svg>

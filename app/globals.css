@@ -1,0 +1,249 @@
+@import "tailwindcss";
+
+/* ─── Tailwind v4 Design Tokens ────────────────────────────── */
+@theme {
+  --color-white:       #ffffff;
+  --color-off-white:   #f5f5f7;
+  --color-card-bg:     #f5f5f7;
+  --color-near-black:  #1d1d1f;
+  --color-subtext:     #86868b;
+  --color-mid-text:    #515154;
+  --color-accent-blue: #0066cc;
+  --color-border:      #d2d2d7;
+  --color-border-hover:#1d1d1f;
+  --font-heading:      var(--font-jakarta), var(--font-inter), system-ui, -apple-system, sans-serif;
+  --font-body:         var(--font-inter), system-ui, -apple-system, sans-serif;
+}
+
+/* ─── CSS Custom Properties ─────────────────────────────────── */
+:root {
+  /* Fluid type scale — Apple-scale sizes */
+  --text-hero:    clamp(3.5rem, 8vw, 7rem);
+  --text-section: clamp(2.25rem, 4vw, 3.75rem);
+  --text-engine:  clamp(1.75rem, 2.8vw, 2.75rem);
+  --text-sub:     clamp(1.0625rem, 1.8vw, 1.4rem);
+  --text-body:    clamp(0.9375rem, 1.1vw, 1.0625rem);
+
+  /* Spacing system */
+  --nav-h:            4.25rem;
+  --section-pad-y:    clamp(5rem, 10vw, 9rem);
+  --container-pad-x:  clamp(1.5rem, 6vw, 6rem);
+  --content-max-w:    90rem;         /* 1440px — fuller use of wide screens */
+
+  /* Card system */
+  --card-radius:      1.125rem;
+  --card-radius-lg:   2rem;
+  --card-pad:         clamp(1.5rem, 3vw, 2.25rem);
+  --card-pad-lg:      clamp(2.5rem, 5vw, 4rem);
+
+  /* Gaps */
+  --gap-sm:  clamp(0.875rem, 1.5vw, 1.25rem);
+  --gap-md:  clamp(1.25rem, 2vw, 1.75rem);
+  --gap-lg:  clamp(2rem, 3.5vw, 3rem);
+  --gap-xl:  clamp(4rem, 7vw, 6rem);
+}
+
+/* ─── Reset ─────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  min-height: 100%;
+  scroll-behavior: auto;
+  -webkit-text-size-adjust: 100%;
+  background-color: #ffffff;
+  font-size: 16px;
+}
+
+body {
+  overflow-x: hidden;
+  background-color: #ffffff;
+  color: #1d1d1f;
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  color: #1d1d1f;
+}
+
+p { line-height: 1.7; }
+
+img, svg { display: block; max-width: 100%; }
+
+a { color: inherit; text-decoration: none; }
+
+/* Ensure dark pill buttons always show white text regardless of cascade */
+a.btn-dark,
+button.btn-dark {
+  background-color: #1d1d1f;
+  color: #ffffff !important;
+}
+
+:focus-visible {
+  outline: 2px solid #0066cc;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ─── Layout ─────────────────────────────────────────────────── */
+header {
+  height: 0;
+  overflow: visible;
+}
+
+/* Offset fixed nav */
+main {
+  padding-top: var(--nav-h);
+  isolation: isolate;
+  position: relative;
+  background-color: #ffffff;
+}
+
+/* Every top-level section shares these defaults */
+main > section {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  background-color: #ffffff;
+}
+
+/* ─── Container utility ──────────────────────────────────────── */
+.container-page {
+  max-width: var(--content-max-w);
+  margin-inline: auto;
+  padding-inline: var(--container-pad-x);
+}
+
+/* ─── Section padding utility ───────────────────────────────── */
+.section-pad {
+  padding-block: var(--section-pad-y);
+}
+
+/* ─── Eyebrow / badge pill ───────────────────────────────────── */
+.eyebrow-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3125rem 0.875rem;
+  border-radius: 9999px;
+  background-color: #f5f5f7;
+  border: 1px solid #d2d2d7;
+  font-family: var(--font-heading);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #1d1d1f;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+  white-space: nowrap;
+}
+
+/* ─── Section heading ────────────────────────────────────────── */
+.section-heading {
+  font-family: var(--font-heading);
+  font-size: var(--text-section);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+  color: #1d1d1f;
+  margin-bottom: 3.5rem;
+}
+
+/* ─── Card surfaces ──────────────────────────────────────────── */
+.card {
+  background-color: #f5f5f7;
+  border: 1px solid #d2d2d7;
+  border-radius: var(--card-radius);
+  padding: var(--card-pad);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  border-color: #1d1d1f;
+}
+
+.card-lg {
+  background-color: #f5f5f7;
+  border: 1px solid #d2d2d7;
+  border-radius: var(--card-radius-lg);
+  padding: var(--card-pad-lg);
+}
+
+/* Keep legacy name working */
+.bento-card {
+  background-color: #f5f5f7;
+  border: 1px solid #d2d2d7;
+  border-radius: var(--card-radius);
+  padding: var(--card-pad);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bento-card:hover {
+  border-color: #1d1d1f;
+}
+
+/* ─── Pill button / tag ──────────────────────────────────────── */
+.pill-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3125rem 0.875rem;
+  border-radius: 9999px;
+  background-color: #ffffff;
+  border: 1px solid #d2d2d7;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #1d1d1f;
+  white-space: nowrap;
+}
+
+/* ─── Dividers ───────────────────────────────────────────────── */
+.section-divider {
+  border: none;
+  border-top: 1px solid #d2d2d7;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────────── */
+::-webkit-scrollbar        { width: 5px; }
+::-webkit-scrollbar-track  { background: #ffffff; }
+::-webkit-scrollbar-thumb  { background: #d2d2d7; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #86868b; }
+
+/* ─── Animations ─────────────────────────────────────────────── */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─── Mobile responsive helpers ─────────────────────────────── */
+@media (max-width: 640px) {
+  .section-pad {
+    padding-block: clamp(3rem, 8vw, 5rem);
+  }
+  .section-heading {
+    margin-bottom: 2rem;
+  }
+  .card {
+    padding: 1.25rem;
+  }
+  .card-lg {
+    padding: 1.5rem;
+    border-radius: 1.25rem;
+  }
+}
+
+/* Hide scrollbar on nav pill row (webkit + firefox) */
+.nav-pills::-webkit-scrollbar { display: none; }
+.nav-pills { scrollbar-width: none; }
+
+/* Hide scrollbar on any horizontal scroll track */
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { scrollbar-width: none; }
