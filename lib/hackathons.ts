@@ -12,6 +12,7 @@ export interface HackathonEntry {
   participationType: string;
   outcome: string;
   category?: "hackathon" | "competition";
+  image?: string;
 }
 
 export { hackathonsData as hackathons } from "@/data/hackathons";

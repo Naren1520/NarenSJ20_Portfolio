@@ -1,46 +1,7 @@
 "use client";
 
 import ScrollReveal from "@/components/ui/ScrollReveal";
-
-
-const ACTIVITIES = [
-  {
-    id: "emcee",
-    title: "College Fest Emcee",
-    status: "Event Host / Emcee",
-    organisation: "Pre-University College",
-    image: "/otheractivities/emcee.jpg",
-    description:
-      "Hosted and coordinated a college fest as an Emcee before an audience of 2,000+ attendees, managing stage proceedings, audience engagement, announcements, and event transitions.",
-  },
-  {
-    id: "technical-mentor",
-    title: "Technical Session Mentor",
-    status: "Mentor / Session Facilitator",
-    organisation: "College / Student Community",
-    image: "/otheractivities/sessionmentor.png",
-    description:
-      "Mentored students and conducted technical sessions, helping participants understand development concepts, tools, and practical approaches to building projects.",
-  },
-  {
-    id: "workshop-speaker",
-    title: "Technical Workshop Speaker",
-    status: "Speaker / Session Facilitator",
-    organisation: "College / Student Community",
-    image: "/otheractivities/session1.jpeg",
-    description:
-      "Delivered technical sessions and interactive workshops, sharing practical knowledge and guiding students through technical concepts and project development.",
-  },
-  {
-    id: "radio-storytelling",
-    title: "Radio Storytelling Session",
-    status: "Storytelling Speaker",
-    organisation: "Radio / Community Platform",
-    image: "/otheractivities/akashwani.png",
-    description:
-      "Delivered a storytelling session on radio, engaging listeners through narrative-driven communication and demonstrating public speaking, creativity, and audience engagement.",
-  },
-];
+import { otherActivitiesData } from "@/data/otherActivities";
 
 export default function OtherActivitiesSection() {
   return (
@@ -67,7 +28,7 @@ export default function OtherActivitiesSection() {
         }}
       >
         <div style={{ display: "flex", gap: "1rem", width: "max-content" }}>
-          {ACTIVITIES.map((item, i) => (
+          {otherActivitiesData.map((item, i) => (
             <ScrollReveal key={item.id} delay={i * 80} duration={420}>
               <div
                 style={{
@@ -90,7 +51,6 @@ export default function OtherActivitiesSection() {
                   flexDirection: "column",
                   gap: "0.5rem",
                 }}>
-                  {/* Status pill */}
                   <span style={{
                     alignSelf: "flex-start",
                     padding: "0.1875rem 0.625rem",
@@ -106,7 +66,6 @@ export default function OtherActivitiesSection() {
                     {item.status}
                   </span>
 
-                  {/* Title */}
                   <h3 style={{
                     fontFamily: "var(--font-heading)",
                     fontSize: "1.0625rem",
@@ -118,7 +77,6 @@ export default function OtherActivitiesSection() {
                     {item.title}
                   </h3>
 
-                  {/* Organisation */}
                   <p style={{
                     fontSize: "0.75rem",
                     fontWeight: 600,
@@ -130,7 +88,7 @@ export default function OtherActivitiesSection() {
                   </p>
                 </div>
 
-                {/* Rectangle image — between heading and description */}
+                {/* Rectangle image */}
                 {item.image && (
                   <div style={{
                     width: "100%",

@@ -124,6 +124,7 @@ export default function HackathonsSection() {
                   gap: "0.625rem",
                   height: "100%",
                 }}>
+
                   {/* Top row: result badge + date */}
                   <div style={{
                     display: "flex",
@@ -175,6 +176,31 @@ export default function HackathonsSection() {
                   }}>
                     {entry.organiser}
                   </p>
+
+                  {/* Image — rectangle between header and outcome */}
+                  {entry.image && (
+                    <div style={{
+                      width: "100%",
+                      aspectRatio: "16 / 9",
+                      overflow: "hidden",
+                      borderRadius: "0.5rem",
+                      backgroundColor: "#e8e8ed",
+                      flexShrink: 0,
+                    }}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={entry.image}
+                        alt={entry.eventName}
+                        loading="lazy"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          display: "block",
+                        }}
+                      />
+                    </div>
+                  )}
 
                   {/* Outcome */}
                   <p style={{
