@@ -169,23 +169,45 @@ export default function VoiceAgent() {
   const speak = useCallback((text: string) => {
     window.speechSynthesis.cancel();
     const utt = new SpeechSynthesisUtterance(text);
-    utt.rate  = 0.95;
-    utt.pitch = 1;
-    utt.lang  = "en-US";
+    utt.rate  = 0.92;   // slightly slower — clearer, warmer
+    utt.pitch = 1.15;   // a touch higher — feminine, bright
+    utt.lang  = "en-GB"; // British English — polished accent
 
-    /* Prefer a natural voice */
+    const setVoiceAndSpeak = () => {
+      const voices = window.speechSynthesis.getVoices();
+
+      /* Priority list — best female voices across browsers/OS */
+      const preferred =
+        voices.find(v => v.name === "Samantha")                          // macOS / iOS — very natural
+        ?? voices.find(v => v.name === "Google UK English Female")       // Chrome on Windows/Android
+        ?? voices.find(v => v.name === "Microsoft Aria Online (Natural) - English (United States)") // Edge
+        ?? voices.find(v => v.name === "Microsoft Zira - English (United States)") // Windows fallback
+        ?? voices.find(v => v.name === "Karen")                          // macOS Australian
+        ?? voices.find(v => v.name === "Moira")                          // macOS Irish
+        ?? voices.find(v => /female|woman/i.test(v.name) && /en[-_]/i.test(v.lang))
+        ?? voices.find(v => /en[-_](GB|AU|US|IE)/i.test(v.lang) && v.name.toLowerCase().includes("female"))
+        ?? voices.find(v => /en[-_]/i.test(v.lang));                     // any English as last resort
+
+      if (preferred) utt.voice = preferred;
+
+      utt.onstart = () => setState("speaking");
+      utt.onend   = () => setState("idle");
+      utt.onerror = () => setState("idle");
+
+      synthRef.current = utt;
+      window.speechSynthesis.speak(utt);
+    };
+
+    // Voices may not be loaded yet on first call — wait for them
     const voices = window.speechSynthesis.getVoices();
-    const preferred = voices.find(v =>
-      /Google US English|Samantha|Karen|Daniel|Alex/i.test(v.name)
-    ) ?? voices.find(v => v.lang === "en-US") ?? voices[0];
-    if (preferred) utt.voice = preferred;
-
-    utt.onstart = () => setState("speaking");
-    utt.onend   = () => setState("idle");
-    utt.onerror = () => setState("idle");
-
-    synthRef.current = utt;
-    window.speechSynthesis.speak(utt);
+    if (voices.length > 0) {
+      setVoiceAndSpeak();
+    } else {
+      window.speechSynthesis.onvoiceschanged = () => {
+        window.speechSynthesis.onvoiceschanged = null;
+        setVoiceAndSpeak();
+      };
+    }
   }, []);
 
   const listen = useCallback(() => {

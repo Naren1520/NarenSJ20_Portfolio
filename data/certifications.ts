@@ -10,7 +10,7 @@ export const certificationsData: Certification[] = [
     dateIssued: "2024-12",
     description: "Successfully completed the Social Innovation Program, demonstrating skills in social innovation and impact-driven solutions.",
     status: "Completed",
-    image: DEFAULT_IMAGE,
+    image: "/certifications/socialinnovation.png",
   },
   {
     id: "ai-workshop-nxtwave",
@@ -19,7 +19,7 @@ export const certificationsData: Certification[] = [
     dateIssued: "2024-08",
     description: "Participated in an AI workshop focused on building Generative AI models and developing practical AI skills.",
     status: "Completed",
-    image: DEFAULT_IMAGE,
+    image: "/certifications/aiworkshop.png",
   },
   {
     id: "aerolabs-workshop",
@@ -28,7 +28,7 @@ export const certificationsData: Certification[] = [
     dateIssued: "2024-06",
     description: "Participated in a workshop covering Flight and Web Creation technologies.",
     status: "Completed",
-    image: DEFAULT_IMAGE,
+    image: "/certifications/aeromodelling.png",
   },
   {
     id: "microsoft-ai-challenge",
@@ -37,7 +37,7 @@ export const certificationsData: Certification[] = [
     dateIssued: "2025-01",
     description: "Completed the AI Learning Challenge as part of AINNOVATION 2025, demonstrating knowledge of AI technologies and Microsoft AI services.",
     status: "Completed",
-    image: DEFAULT_IMAGE,
+    image: "/certifications/ailearning.png",
   },
   {
     id: "microsoft-applied-ai",
@@ -46,7 +46,7 @@ export const certificationsData: Certification[] = [
     dateIssued: "2025-02",
     description: "Completed the Applied AI Learning Challenge, gaining hands-on experience in practical AI applications.",
     status: "Completed",
-    image: DEFAULT_IMAGE,
+    image: "/certifications/appliedai.png",
   },
   {
     id: "microsoft-azure",
@@ -55,7 +55,7 @@ export const certificationsData: Certification[] = [
     dateIssued: "2025-03",
     description: "Completed the Azure Learning Challenge, demonstrating knowledge of cloud computing and Azure services.",
     status: "Completed",
-    image: DEFAULT_IMAGE,
+    image: "/certifications/azurelearning.png",
   },
   {
     id: "cybersecurity-cysec",
@@ -64,7 +64,7 @@ export const certificationsData: Certification[] = [
     dateIssued: "2024-09",
     description: "Completed cybersecurity certification covering security protocols, threat detection, and secure system design practices.",
     status: "Certified",
-    image: DEFAULT_IMAGE,
+    image: "/certifications/cysec.png",
   },
   {
     id: "java-infosys",
@@ -73,7 +73,7 @@ export const certificationsData: Certification[] = [
     dateIssued: "2023-11",
     description: "Demonstrated proficiency in Java programming, object-oriented programming, and enterprise application development.",
     status: "Certified",
-    image: DEFAULT_IMAGE,
+    image: "/certifications/java.png",
   },
   {
     id: "swe-infosys",
@@ -82,7 +82,7 @@ export const certificationsData: Certification[] = [
     dateIssued: "2023-09",
     description: "Completed training covering software engineering principles, requirements engineering, Waterfall, Scrum, and quality assurance.",
     status: "Certified",
-    image: DEFAULT_IMAGE,
+    image: "/certifications/softwareengineering.png",
   },
   {
     id: "linux-coursera",
@@ -91,6 +91,6 @@ export const certificationsData: Certification[] = [
     dateIssued: "2024-04",
     description: "Demonstrated proficiency in Linux processes, process management, and system resource management.",
     status: "Certified",
-    image: DEFAULT_IMAGE,
+    image: "/certifications/linux1.png",
   },
 ];
