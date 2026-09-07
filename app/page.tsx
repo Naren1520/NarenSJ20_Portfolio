@@ -12,24 +12,28 @@ import VolunteeringSection from "@/components/sections/VolunteeringSection";
 import ResearchSection from "@/components/sections/ResearchSection";
 import OtherActivitiesSection from "@/components/sections/OtherActivitiesSection";
 import ContactSection from "@/components/sections/ContactSection";
+import SiteFooter from "@/components/layout/SiteFooter";
 
 export default function Home() {
   return (
-    <main>
-      <HeroSection />
-      <AboutSection />
-      <ExperienceSection />
-      <ProjectsSection />
-      <EngineSection />
-      <EducationSection />
-      <SkillsSection />
-      <AchievementsSection />
-      <CertificationsSection />
-      <HackathonsSection />
-      <VolunteeringSection />
-      <ResearchSection />
-      <OtherActivitiesSection />
-      <ContactSection />
-    </main>
+    <>
+      <main>
+        <HeroSection />
+        <AboutSection />
+        <ExperienceSection />
+        <ProjectsSection />
+        <EngineSection />
+        <EducationSection />
+        <SkillsSection />
+        <AchievementsSection />
+        <CertificationsSection />
+        <HackathonsSection />
+        <VolunteeringSection />
+        <ResearchSection />
+        <OtherActivitiesSection />
+        <ContactSection />
+      </main>
+      <SiteFooter />
+    </>
   );
 }
