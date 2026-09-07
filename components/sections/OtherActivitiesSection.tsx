@@ -2,12 +2,14 @@
 
 import ScrollReveal from "@/components/ui/ScrollReveal";
 
+
 const ACTIVITIES = [
   {
     id: "emcee",
     title: "College Fest Emcee",
     status: "Event Host / Emcee",
     organisation: "Pre-University College",
+    image: "/otheractivities/emcee.jpg",
     description:
       "Hosted and coordinated a college fest as an Emcee before an audience of 2,000+ attendees, managing stage proceedings, audience engagement, announcements, and event transitions.",
   },
@@ -16,6 +18,7 @@ const ACTIVITIES = [
     title: "Technical Session Mentor",
     status: "Mentor / Session Facilitator",
     organisation: "College / Student Community",
+    image: "/otheractivities/sessionmentor.png",
     description:
       "Mentored students and conducted technical sessions, helping participants understand development concepts, tools, and practical approaches to building projects.",
   },
@@ -24,6 +27,7 @@ const ACTIVITIES = [
     title: "Technical Workshop Speaker",
     status: "Speaker / Session Facilitator",
     organisation: "College / Student Community",
+    image: "/otheractivities/session1.jpeg",
     description:
       "Delivered technical sessions and interactive workshops, sharing practical knowledge and guiding students through technical concepts and project development.",
   },
@@ -32,6 +36,7 @@ const ACTIVITIES = [
     title: "Radio Storytelling Session",
     status: "Storytelling Speaker",
     organisation: "Radio / Community Platform",
+    image: "/otheractivities/akashwani.png",
     description:
       "Delivered a storytelling session on radio, engaging listeners through narrative-driven communication and demonstrating public speaking, creativity, and audience engagement.",
   },
@@ -51,94 +56,120 @@ export default function OtherActivitiesSection() {
         </ScrollReveal>
       </div>
 
-      {/* Horizontal scroll track — full viewport width */}
+      {/* Horizontal scroll row */}
       <div
+        className="hide-scrollbar"
         style={{
           width: "100%",
           overflowX: "auto",
-          scrollbarWidth: "none",
-          msOverflowStyle: "none",
+          paddingInline: "var(--container-pad-x)",
           paddingBottom: "var(--section-pad-y)",
-          /* allow scroll to start/end with container padding */
-          paddingLeft: "var(--container-pad-x)",
-          paddingRight: "var(--container-pad-x)",
         }}
-        /* hide webkit scrollbar */
-        className="hide-scrollbar"
       >
-        <div
-          style={{
-            display: "flex",
-            gap: "1rem",
-            /* cards don't shrink — they stay at fixed width and scroll */
-            width: "max-content",
-          }}
-        >
+        <div style={{ display: "flex", gap: "1rem", width: "max-content" }}>
           {ACTIVITIES.map((item, i) => (
             <ScrollReveal key={item.id} delay={i * 80} duration={420}>
               <div
                 style={{
-                  width: "clamp(260px, 30vw, 340px)",
+                  width: "clamp(260px, 30vw, 320px)",
                   flexShrink: 0,
                   backgroundColor: "#f5f5f7",
                   border: "1px solid #d2d2d7",
                   borderRadius: "1.125rem",
-                  padding: "clamp(1.5rem, 3vw, 2rem)",
+                  overflow: "hidden",
                   display: "flex",
                   flexDirection: "column",
-                  gap: "0.75rem",
-                  height: "100%",
                   boxSizing: "border-box",
                 }}
               >
-                {/* Status pill */}
-                <span style={{
-                  alignSelf: "flex-start",
-                  padding: "0.1875rem 0.625rem",
-                  borderRadius: "9999px",
-                  border: "1px solid #d2d2d7",
-                  backgroundColor: "#ffffff",
-                  fontSize: "0.6875rem",
-                  fontWeight: 600,
-                  color: "#515154",
-                  fontFamily: "var(--font-heading)",
-                  whiteSpace: "nowrap",
+                {/* Text block — status + title + org */}
+                <div style={{
+                  padding: "clamp(1.25rem, 2.5vw, 1.5rem)",
+                  paddingBottom: item.image ? "1rem" : undefined,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.5rem",
                 }}>
-                  {item.status}
-                </span>
+                  {/* Status pill */}
+                  <span style={{
+                    alignSelf: "flex-start",
+                    padding: "0.1875rem 0.625rem",
+                    borderRadius: "9999px",
+                    border: "1px solid #d2d2d7",
+                    backgroundColor: "#ffffff",
+                    fontSize: "0.6875rem",
+                    fontWeight: 600,
+                    color: "#515154",
+                    fontFamily: "var(--font-heading)",
+                    whiteSpace: "nowrap",
+                  }}>
+                    {item.status}
+                  </span>
 
-                {/* Title */}
-                <h3 style={{
-                  fontFamily: "var(--font-heading)",
-                  fontSize: "1.0625rem",
-                  fontWeight: 700,
-                  color: "#1d1d1f",
-                  lineHeight: 1.3,
-                }}>
-                  {item.title}
-                </h3>
+                  {/* Title */}
+                  <h3 style={{
+                    fontFamily: "var(--font-heading)",
+                    fontSize: "1.0625rem",
+                    fontWeight: 700,
+                    color: "#1d1d1f",
+                    lineHeight: 1.3,
+                    margin: 0,
+                  }}>
+                    {item.title}
+                  </h3>
 
-                {/* Organisation */}
-                <p style={{
-                  fontSize: "0.75rem",
-                  fontWeight: 600,
-                  color: "#0066cc",
-                  fontFamily: "var(--font-heading)",
-                }}>
-                  {item.organisation}
-                </p>
+                  {/* Organisation */}
+                  <p style={{
+                    fontSize: "0.75rem",
+                    fontWeight: 600,
+                    color: "#0066cc",
+                    fontFamily: "var(--font-heading)",
+                    margin: 0,
+                  }}>
+                    {item.organisation}
+                  </p>
+                </div>
+
+                {/* Rectangle image — between heading and description */}
+                {item.image && (
+                  <div style={{
+                    width: "100%",
+                    aspectRatio: "16 / 9",
+                    overflow: "hidden",
+                    flexShrink: 0,
+                    backgroundColor: "#e8e8ed",
+                  }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      loading="lazy"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        objectPosition: "center",
+                        display: "block",
+                      }}
+                    />
+                  </div>
+                )}
 
                 {/* Description */}
-                <p style={{
-                  fontSize: "0.875rem",
-                  color: "#515154",
-                  lineHeight: 1.7,
-                  paddingTop: "0.75rem",
-                  borderTop: "1px solid #d2d2d7",
-                  marginTop: "auto",
+                <div style={{
+                  padding: "clamp(1rem, 2vw, 1.25rem)",
+                  paddingTop: item.image ? "1rem" : 0,
+                  borderTop: item.image ? "1px solid #d2d2d7" : "none",
                 }}>
-                  {item.description}
-                </p>
+                  <p style={{
+                    fontSize: "0.875rem",
+                    color: "#515154",
+                    lineHeight: 1.7,
+                    margin: 0,
+                  }}>
+                    {item.description}
+                  </p>
+                </div>
               </div>
             </ScrollReveal>
           ))}
