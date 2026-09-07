@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect, useCallback } from "react";
+import Link from "next/link";
 import { certifications } from "@/lib/certifications";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 
@@ -143,6 +144,10 @@ export default function CertificationsSection() {
         <div style={{ display: "flex", gap: `${GAP}px`, width: "max-content" }}>
           {sorted.map((cert, i) => (
             <ScrollReveal key={cert.id} delay={i * 50} duration={380}>
+              <Link
+                href={`/certifications/${cert.id}`}
+                style={{ display: "block", textDecoration: "none", color: "inherit" }}
+              >
               <div
                 style={{
                   width: `${CARD_W}px`,
@@ -155,21 +160,26 @@ export default function CertificationsSection() {
                   display: "flex",
                   flexDirection: "column",
                   border: "1px solid #e8e8ed",
+                  transition: "box-shadow 0.2s ease",
                 }}
+                onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = "0 4px 20px rgba(0,0,0,0.10)"; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = "none"; }}
               >
                 {/* Image zone */}
-                <div style={{
-                  width: "100%",
-                  height: `${IMG_H}px`,
-                  flexShrink: 0,
-                  backgroundColor: "#f5f5f7",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  overflow: "hidden",
-                  padding: "1rem",
-                  boxSizing: "border-box",
-                }}>
+                <div
+                  style={{
+                    width: "100%",
+                    height: `${IMG_H}px`,
+                    flexShrink: 0,
+                    backgroundColor: "#f5f5f7",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    overflow: "hidden",
+                    padding: "1rem",
+                    boxSizing: "border-box",
+                  }}
+                >
                   {cert.image ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -272,6 +282,7 @@ export default function CertificationsSection() {
                   )}
                 </div>
               </div>
+              </Link>
             </ScrollReveal>
           ))}
         </div>
