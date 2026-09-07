@@ -13,7 +13,7 @@ export const otherActivitiesData: OtherActivity[] = [
     title: "College Fest Emcee",
     status: "Event Host / Emcee",
     organisation: "Pre-University College",
-    image: "/otheractivities/emcee.jpg",
+    image: "/otheractivities/emcee.jpeg",
     description:
       "Hosted and coordinated a college fest as an Emcee before an audience of 2,000+ attendees, managing stage proceedings, audience engagement, announcements, and event transitions.",
   },

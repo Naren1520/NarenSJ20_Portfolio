@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import { hackathons } from "@/lib/hackathons";
 import ScrollReveal from "@/components/ui/ScrollReveal";
@@ -25,6 +25,15 @@ const IMG_H  = 280;   /* px — image zone */
 
 export default function HackathonsSection() {
   const [tab, setTab] = useState<Tab>("Hackathons & Awards");
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = useCallback((dir: "prev" | "next") => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const cardW = el.querySelector("a, div[style]")?.getBoundingClientRect().width ?? 300;
+    const step = (cardW + 16) * 2; // scroll 2 cards at a time
+    el.scrollBy({ left: dir === "next" ? step : -step, behavior: "smooth" });
+  }, []);
 
   const sorted = [...hackathons]
     .filter(e => tab === "Hackathons & Awards"
@@ -45,65 +54,106 @@ export default function HackathonsSection() {
           <h2 className="section-heading">Competitions &amp; Events.</h2>
         </ScrollReveal>
 
-        {/* Tab switcher */}
-        <div
-          role="tablist"
-          aria-label="Event categories"
-          style={{
-            display: "inline-flex",
-            gap: "0.25rem",
-            padding: "0.3125rem",
-            backgroundColor: "#f5f5f7",
-            border: "1px solid #d2d2d7",
-            borderRadius: "9999px",
-            marginBottom: "2.5rem",
-          }}
-        >
-          {TABS.map((t) => {
-            const active = tab === t;
-            const count  = hackathons.filter(e =>
-              t === "Hackathons & Awards"
-                ? (e.category ?? "hackathon") === "hackathon"
-                : e.category === "competition"
-            ).length;
-            return (
+        {/* Tab switcher + nav arrows row */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "2.5rem", flexWrap: "wrap", gap: "1rem" }}>
+          <div
+            role="tablist"
+            aria-label="Event categories"
+            style={{
+              display: "inline-flex",
+              gap: "0.25rem",
+              padding: "0.3125rem",
+              backgroundColor: "#f5f5f7",
+              border: "1px solid #d2d2d7",
+              borderRadius: "9999px",
+            }}
+          >
+            {TABS.map((t) => {
+              const active = tab === t;
+              const count  = hackathons.filter(e =>
+                t === "Hackathons & Awards"
+                  ? (e.category ?? "hackathon") === "hackathon"
+                  : e.category === "competition"
+              ).length;
+              return (
+                <button
+                  key={t}
+                  role="tab"
+                  aria-selected={active}
+                  onClick={() => setTab(t)}
+                  style={{
+                    padding: "0.4375rem 1.125rem",
+                    borderRadius: "9999px",
+                    fontSize: "0.8125rem",
+                    fontWeight: active ? 600 : 500,
+                    fontFamily: "var(--font-heading)",
+                    color: active ? "#1d1d1f" : "#86868b",
+                    backgroundColor: active ? "#ffffff" : "transparent",
+                    boxShadow: active ? "0 1px 4px rgba(0,0,0,0.1)" : "none",
+                    border: "none",
+                    cursor: "pointer",
+                    transition: "all 0.15s ease",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {t}
+                  <span style={{
+                    marginLeft: "0.375rem",
+                    fontSize: "0.6875rem",
+                    fontWeight: 600,
+                    color: "#86868b",
+                  }}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Prev / Next arrows */}
+          <div style={{ display: "flex", gap: "0.5rem" }}>
+            {(["prev", "next"] as const).map((dir) => (
               <button
-                key={t}
-                role="tab"
-                aria-selected={active}
-                onClick={() => setTab(t)}
+                key={dir}
+                aria-label={dir === "prev" ? "Scroll left" : "Scroll right"}
+                onClick={() => scroll(dir)}
                 style={{
-                  padding: "0.4375rem 1.125rem",
+                  width: "2.25rem",
+                  height: "2.25rem",
                   borderRadius: "9999px",
-                  fontSize: "0.8125rem",
-                  fontWeight: active ? 600 : 500,
-                  fontFamily: "var(--font-heading)",
-                  color: active ? "#1d1d1f" : "#86868b",
-                  backgroundColor: active ? "#ffffff" : "transparent",
-                  boxShadow: active ? "0 1px 4px rgba(0,0,0,0.1)" : "none",
-                  border: "none",
+                  backgroundColor: "#f5f5f7",
+                  border: "1px solid #d2d2d7",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                   cursor: "pointer",
-                  transition: "all 0.15s ease",
-                  whiteSpace: "nowrap",
+                  transition: "background-color 0.15s ease, box-shadow 0.15s ease",
+                  flexShrink: 0,
+                }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLButtonElement).style.backgroundColor = "#e8e8ed";
+                  (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 2px 8px rgba(0,0,0,0.10)";
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLButtonElement).style.backgroundColor = "#f5f5f7";
+                  (e.currentTarget as HTMLButtonElement).style.boxShadow = "none";
                 }}
               >
-                {t}
-                <span style={{
-                  marginLeft: "0.375rem",
-                  fontSize: "0.6875rem",
-                  fontWeight: 600,
-                  color: "#86868b",
-                }}>
-                  {count}
-                </span>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  {dir === "prev"
+                    ? <path d="M9 2L4 7L9 12" stroke="#1d1d1f" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+                    : <path d="M5 2L10 7L5 12" stroke="#1d1d1f" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+                  }
+                </svg>
               </button>
-            );
-          })}
+            ))}
+          </div>
         </div>
       </div>
 
       {/* ── Apple-style horizontal scroll row ── */}
       <div
+        ref={scrollRef}
         className="hide-scrollbar"
         style={{
           overflowX: "auto",
