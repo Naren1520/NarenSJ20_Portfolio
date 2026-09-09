@@ -204,21 +204,7 @@ export default function ContactSection() {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer
-        className="w-full border-t border-[#d2d2d7] bg-white flex flex-wrap items-center justify-between"
-        style={{ gap: "1rem", padding: "1.75rem var(--container-pad-x)" }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-          <span style={{ width: "0.5rem", height: "0.5rem", borderRadius: "9999px", backgroundColor: "#1d1d1f", display: "block" }} />
-          <span style={{ fontFamily: "var(--font-heading)", fontSize: "0.875rem", fontWeight: 700, color: "#1d1d1f" }}>
-            Naren S J
-          </span>
-        </div>
-        <p style={{ fontSize: "0.75rem", color: "#86868b" }}>
-          © {new Date().getFullYear()} Naren S J. Built with TypeScript &amp; Next.js.
-        </p>
-      </footer>
+      {/* Footer removed — SiteFooter renders globally after ContactSection */}
     </section>
   );
 }
