@@ -287,7 +287,7 @@ export const projectsData: Project[] = [
     tags: ["React", "Tailwind CSS", "JavaScript", "Animations", "Canvas"],
     link: "https://happy-newyear-20-26.netlify.app/",
     githubUrl: "https://github.com/Naren1520/HappyNewYear_2026.git",
-    image: "https://images.unsplash.com/photo-1574875390940-63e9dd0e46e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+    image: "https://images.unsplash.com/photo-1766961811078-7c13ed431c03?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     featured: false,
   },
   {
