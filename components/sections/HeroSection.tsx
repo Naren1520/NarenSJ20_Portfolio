@@ -52,10 +52,10 @@ export default function HeroSection() {
         padding: "clamp(4rem, 10vw, 8rem) clamp(1.5rem, 6vw, 6rem)",
       }}>
         {/* Eyebrow */}
-        <div className="eyebrow-tag" style={{ marginBottom: "2rem" }}>
+        {/* <div className="eyebrow-tag" style={{ marginBottom: "2rem" }}>
           <span style={{ width: "0.4rem", height: "0.4rem", borderRadius: "9999px", backgroundColor: "#0066cc", flexShrink: 0 }} />
           AI Engineer &amp; Software Builder
-        </div>
+        </div> */}
 
         {/* Headline — Apple-scale */}
         <h1

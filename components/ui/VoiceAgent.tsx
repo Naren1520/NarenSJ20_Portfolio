@@ -130,33 +130,38 @@ const SECTION_NAV: { patterns: RegExp[]; sectionId: string; label: string }[] = 
 
 /* ── Project navigation detection ──────────────────────────── */
 function detectProjectNavigation(query: string): { id: string; title: string } | null {
-  const lower = query.toLowerCase();
-  const navTriggers = /show|open|navigate|go to|take me to|display|find/i;
-  if (!navTriggers.test(query)) return null;
+  const lower = query.toLowerCase().trim();
 
-  // Score each project by how well the query matches it
+  // Nav triggers — broad, includes spoken variants
+  const hasNavTrigger = /show|open|navigate|go to|goto|take me|display|find|visit|load|launch|see/i.test(query);
+
+  // Score each project
   let bestMatch: { id: string; title: string; score: number } | null = null;
 
   for (const project of projectsData) {
     const titleLower = project.title.toLowerCase();
     const idLower    = project.id.replace(/-/g, " ");
+    const idNoSpace  = project.id.replace(/-/g, "");
     let score = 0;
 
-    // Exact full title match — highest priority
+    // Exact full title match
     if (lower.includes(titleLower)) {
       score = titleLower.length * 10;
     }
-    // Exact ID match (e.g. "spmanager" or "sp manager")
-    else if (lower.includes(idLower) || lower.includes(project.id.toLowerCase())) {
+    // Exact ID match (with or without spaces/dashes)
+    else if (
+      lower.includes(idLower) ||
+      lower.includes(idNoSpace) ||
+      lower.includes(project.id.toLowerCase())
+    ) {
       score = idLower.length * 8;
     }
-    // Word-level match — only count words > 4 chars to avoid false positives
+    // Word-level — only words > 4 chars to avoid false positives
     else {
       const words = titleLower.split(/\s+/).filter(w => w.length > 4);
-      const matchedWords = words.filter(w => lower.includes(w));
-      if (matchedWords.length > 0) {
-        // Score by total matched characters — longer word matches win
-        score = matchedWords.reduce((sum, w) => sum + w.length, 0);
+      const matched = words.filter(w => lower.includes(w));
+      if (matched.length > 0) {
+        score = matched.reduce((s, w) => s + w.length, 0);
       }
     }
 
@@ -165,12 +170,21 @@ function detectProjectNavigation(query: string): { id: string; title: string } |
     }
   }
 
-  return bestMatch ? { id: bestMatch.id, title: bestMatch.title } : null;
+  if (!bestMatch) return null;
+
+  // If nav trigger present, always navigate
+  // If no trigger, only navigate for high-confidence matches (score >= 40)
+  // so "tell me about CRIMSON" navigates, but "skills" doesn't accidentally match
+  if (hasNavTrigger || bestMatch.score >= 40) {
+    return { id: bestMatch.id, title: bestMatch.title };
+  }
+
+  return null;
 }
 
 /* ── Section navigation detection ──────────────────────────── */
 function detectSectionNavigation(query: string): { sectionId: string; label: string } | null {
-  const navTriggers = /show|scroll|go to|take me to|navigate|open/i;
+  const navTriggers = /show|scroll|go to|goto|take me|navigate|open|visit/i;
   if (!navTriggers.test(query)) return null;
   for (const s of SECTION_NAV) {
     if (s.patterns.some(p => p.test(query))) return { sectionId: s.sectionId, label: s.label };
@@ -236,11 +250,21 @@ interface ISpeechRecognition {
   onerror: (() => void) | null;
   onend: (() => void) | null;
 }
+interface ISpeechRecognitionResult {
+  readonly isFinal: boolean;
+  readonly length: number;
+  item(index: number): { transcript: string };
+  [index: number]: { transcript: string };
+}
 interface ISpeechRecognitionEvent {
-  results: { [i: number]: { [j: number]: { transcript: string } } };
+  readonly resultIndex: number;
+  readonly results: {
+    readonly length: number;
+    item(index: number): ISpeechRecognitionResult;
+    [index: number]: ISpeechRecognitionResult;
+  };
 }
 type SpeechRecogCtor = new () => ISpeechRecognition;
-
 function getSpeechRecog(): SpeechRecogCtor | undefined {
   if (typeof window === "undefined") return undefined;
   return (
@@ -258,9 +282,12 @@ export default function VoiceAgent() {
   const [open,        setOpen]        = useState(false);
   const [state,       setState]       = useState<AgentState>("idle");
   const [transcript,  setTranscript]  = useState("");
+  const [interim,     setInterim]     = useState("");
   const [reply,       setReply]       = useState("");
   const [navInfo,     setNavInfo]     = useState<string | null>(null);
   const [supported,   setSupported]   = useState(true);
+  const [textInput,   setTextInput]   = useState("");
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const recogRef = useRef<ISpeechRecognition | null>(null);
 
@@ -336,16 +363,35 @@ export default function VoiceAgent() {
     window.speechSynthesis.cancel();
     const recog = new SpeechRecog();
     recog.lang = "en-US";
-    recog.interimResults = false;
+    recog.interimResults = true;
     recog.maxAlternatives = 1;
-    recog.onstart  = () => { setState("listening"); setTranscript(""); setReply(""); setNavInfo(null); };
+    recog.onstart  = () => { setState("listening"); setTranscript(""); setInterim(""); setReply(""); setNavInfo(null); };
     recog.onresult = (e: ISpeechRecognitionEvent) => {
-      const q = e.results[0][0].transcript;
-      setTranscript(q);
-      processQuery(q);
+      // Collect all results — interim + final
+      let interimText = "";
+      let finalText   = "";
+      for (let i = 0; i < e.results.length; i++) {
+        const result = e.results[i];
+        const t = result[0].transcript;
+        if (result.isFinal) {
+          finalText += t;
+        } else {
+          interimText += t;
+        }
+      }
+
+      // Always show what we're hearing — interim or the accumulating final
+      setInterim(interimText || finalText);
+
+      // When final result arrives, process it
+      if (finalText.trim()) {
+        setTranscript(finalText.trim());
+        setInterim("");
+        processQuery(finalText.trim());
+      }
     };
-    recog.onerror  = () => setState("idle");
-    recog.onend    = () => { if (state === "listening") setState("idle"); };
+    recog.onerror  = () => { setState("idle"); setInterim(""); };
+    recog.onend    = () => { setInterim(""); if (state === "listening") setState("idle"); };
     recogRef.current = recog;
     recog.start();
   }, [processQuery, state]);
@@ -355,6 +401,18 @@ export default function VoiceAgent() {
     window.speechSynthesis.cancel();
     setState("idle");
   }, []);
+
+  const submitText = useCallback((q: string) => {
+    const trimmed = q.trim();
+    if (!trimmed) return;
+    window.speechSynthesis.cancel();
+    setTranscript(trimmed);
+    setInterim("");
+    setReply("");
+    setNavInfo(null);
+    setTextInput("");
+    processQuery(trimmed);
+  }, [processQuery]);
 
   useEffect(() => () => { recogRef.current?.stop(); window.speechSynthesis.cancel(); }, []);
 
@@ -409,8 +467,12 @@ export default function VoiceAgent() {
         <div style={{
           position: "fixed", bottom: "5.5rem", right: "1.5rem", zIndex: 9000,
           width: "clamp(290px, 92vw, 380px)",
-          backgroundColor: "#ffffff", border: "1px solid #d2d2d7",
-          borderRadius: "1.25rem", boxShadow: "0 8px 40px rgba(0,0,0,0.14)",
+          background: "rgba(255,255,255,0.72)",
+          backdropFilter: "blur(24px) saturate(200%)",
+          WebkitBackdropFilter: "blur(24px) saturate(200%)",
+          border: "1px solid rgba(255,255,255,0.75)",
+          borderRadius: "1.375rem",
+          boxShadow: "0 8px 40px rgba(0,0,0,0.14), 0 1px 0 rgba(255,255,255,0.9) inset",
           overflow: "hidden", display: "flex", flexDirection: "column",
         }}>
           {/* Header */}
@@ -468,25 +530,87 @@ export default function VoiceAgent() {
                 {navInfo && (
                   <div style={{
                     display: "flex", alignItems: "center", gap: "0.5rem",
-                    padding: "0.5rem 0.875rem",
-                    backgroundColor: "#f0f7ff", border: "1px solid #bfdbfe",
-                    borderRadius: "0.625rem",
+                    padding: "0.625rem 1rem",
+                    background: "rgba(255,255,255,0.55)",
+                    backdropFilter: "blur(12px) saturate(180%)",
+                    WebkitBackdropFilter: "blur(12px) saturate(180%)",
+                    border: "1px solid rgba(255,255,255,0.7)",
+                    borderRadius: "0.75rem",
+                    boxShadow: "0 2px 12px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.8)",
                   }}>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0066cc" strokeWidth="2.5">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1d1d1f" strokeWidth="2.5">
                       <path d="M5 12h14M12 5l7 7-7 7" />
                     </svg>
-                    <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "#0066cc", fontFamily: "var(--font-heading)" }}>
+                    <span style={{ fontSize: "0.8125rem", fontWeight: 600, color: "#1d1d1f", fontFamily: "var(--font-heading)" }}>
                       {navInfo}
                     </span>
                   </div>
                 )}
 
-                {/* Transcript */}
+                {/* Live interim transcript while speaking — always visible when content exists */}
+                {interim && (
+                  <div style={{
+                    padding: "0.75rem 1rem",
+                    background: "rgba(255,255,255,0.5)",
+                    backdropFilter: "blur(16px) saturate(200%)",
+                    WebkitBackdropFilter: "blur(16px) saturate(200%)",
+                    border: "1px solid rgba(255,255,255,0.65)",
+                    borderRadius: "0.875rem",
+                    boxShadow: "0 2px 16px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.9)",
+                    fontSize: "0.9375rem",
+                    color: "#1d1d1f",
+                    fontFamily: "var(--font-body)",
+                    lineHeight: 1.5,
+                    minHeight: "2.5rem",
+                  }}>
+                    <span style={{
+                      fontSize: "0.625rem", fontWeight: 700, color: "#86868b",
+                      textTransform: "uppercase", letterSpacing: "0.06em",
+                      display: "block", marginBottom: "0.25rem",
+                      fontFamily: "var(--font-heading)",
+                    }}>Hearing…</span>
+                    {interim}
+                    <span style={{
+                      display: "inline-block", width: "2px", height: "1em",
+                      backgroundColor: "#1d1d1f", marginLeft: "2px",
+                      animation: "va-cursor 0.7s steps(1) infinite",
+                      verticalAlign: "text-bottom",
+                    }} />
+                    <style>{`@keyframes va-cursor{0%,100%{opacity:1}50%{opacity:0}}`}</style>
+                  </div>
+                )}
+
+                {/* When listening and no interim yet — show placeholder to confirm mic is active */}
+                {state === "listening" && !interim && !transcript && (
+                  <div style={{
+                    padding: "0.75rem 1rem",
+                    background: "rgba(255,255,255,0.45)",
+                    backdropFilter: "blur(12px) saturate(160%)",
+                    WebkitBackdropFilter: "blur(12px) saturate(160%)",
+                    border: "1px dashed rgba(0,0,0,0.15)",
+                    borderRadius: "0.875rem",
+                    fontSize: "0.8125rem",
+                    color: "#86868b",
+                    fontFamily: "var(--font-heading)",
+                    fontStyle: "italic",
+                  }}>
+                    Speak now — I&apos;m listening…
+                  </div>
+                )}
+
+                {/* Final transcript */}
                 {transcript && (
                   <div style={{
-                    padding: "0.75rem", backgroundColor: "#f5f5f7",
-                    borderRadius: "0.75rem", fontSize: "0.8125rem",
-                    color: "#515154", fontFamily: "var(--font-body)", lineHeight: 1.5,
+                    padding: "0.75rem 1rem",
+                    background: "rgba(255,255,255,0.5)",
+                    backdropFilter: "blur(12px) saturate(180%)",
+                    WebkitBackdropFilter: "blur(12px) saturate(180%)",
+                    border: "1px solid rgba(0,0,0,0.08)",
+                    borderRadius: "0.875rem",
+                    boxShadow: "0 1px 8px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.8)",
+                    fontSize: "0.8125rem",
+                    color: "#1d1d1f",
+                    fontFamily: "var(--font-body)", lineHeight: 1.5,
                   }}>
                     <span style={{
                       fontSize: "0.625rem", fontWeight: 700, color: "#86868b",
@@ -500,15 +624,22 @@ export default function VoiceAgent() {
                 {/* Reply */}
                 {reply && (
                   <div style={{
-                    padding: "0.75rem", backgroundColor: "#1d1d1f",
-                    borderRadius: "0.75rem", fontSize: "0.8125rem",
-                    color: "#ffffff", fontFamily: "var(--font-body)",
-                    lineHeight: 1.6, maxHeight: "150px", overflowY: "auto",
+                    padding: "0.875rem 1rem",
+                    background: "rgba(29,29,31,0.88)",
+                    backdropFilter: "blur(20px) saturate(200%)",
+                    WebkitBackdropFilter: "blur(20px) saturate(200%)",
+                    border: "1px solid rgba(255,255,255,0.10)",
+                    borderRadius: "0.875rem",
+                    boxShadow: "0 4px 24px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.08)",
+                    fontSize: "0.8125rem",
+                    color: "#f5f5f7",
+                    fontFamily: "var(--font-body)",
+                    lineHeight: 1.7, maxHeight: "150px", overflowY: "auto",
                   }}>
                     <span style={{
                       fontSize: "0.625rem", fontWeight: 700, color: "#86868b",
                       textTransform: "uppercase", letterSpacing: "0.06em",
-                      display: "block", marginBottom: "0.25rem", fontFamily: "var(--font-heading)",
+                      display: "block", marginBottom: "0.375rem", fontFamily: "var(--font-heading)",
                     }}>Answer</span>
                     {reply}
                   </div>
@@ -540,53 +671,110 @@ export default function VoiceAgent() {
             )}
           </div>
 
-          {/* Footer */}
-          {supported && (
-            <div style={{
-              padding: "0.875rem 1.25rem", borderTop: "1px solid #f0f0f0",
-              display: "flex", gap: "0.625rem", alignItems: "center",
-            }}>
-              {state === "listening" || state === "speaking" ? (
+          {/* Footer — text input + mic */}
+          <div style={{
+            padding: "0.875rem 1rem",
+            borderTop: "1px solid #f0f0f0",
+            display: "flex",
+            gap: "0.5rem",
+            alignItems: "center",
+          }}>
+            {/* Text input */}
+            <input
+              ref={inputRef}
+              type="text"
+              value={textInput}
+              onChange={e => setTextInput(e.target.value)}
+              onKeyDown={e => { if (e.key === "Enter") submitText(textInput); }}
+              placeholder="Type or use mic…"
+              disabled={state === "thinking"}
+              style={{
+                flex: 1,
+                padding: "0.5625rem 0.875rem",
+                borderRadius: "9999px",
+                backgroundColor: "#f5f5f7",
+                border: "1px solid #d2d2d7",
+                fontSize: "0.8125rem",
+                fontFamily: "var(--font-body)",
+                color: "#1d1d1f",
+                outline: "none",
+                minWidth: 0,
+                transition: "border-color 0.15s ease",
+              }}
+              onFocus={e => { e.currentTarget.style.borderColor = "#1d1d1f"; }}
+              onBlur={e => { e.currentTarget.style.borderColor = "#d2d2d7"; }}
+            />
+
+            {/* Send button */}
+            <button
+              onClick={() => submitText(textInput)}
+              disabled={!textInput.trim() || state === "thinking"}
+              aria-label="Send message"
+              style={{
+                width: "2.125rem", height: "2.125rem",
+                borderRadius: "9999px", flexShrink: 0,
+                backgroundColor: textInput.trim() ? "#1d1d1f" : "#f5f5f7",
+                border: "1px solid #d2d2d7",
+                color: textInput.trim() ? "#fff" : "#86868b",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                cursor: textInput.trim() ? "pointer" : "default",
+                transition: "background-color 0.15s ease",
+              }}
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </button>
+
+            {/* Mic button */}
+            {supported && (
+              state === "listening" || state === "speaking" ? (
                 <button
                   onClick={stop}
+                  aria-label="Stop"
                   style={{
-                    flex: 1, padding: "0.625rem", borderRadius: "9999px",
-                    backgroundColor: "#d93025", color: "#ffffff", border: "none",
-                    cursor: "pointer", fontSize: "0.8125rem", fontWeight: 600,
-                    fontFamily: "var(--font-heading)", display: "flex",
-                    alignItems: "center", justifyContent: "center", gap: "0.375rem",
+                    width: "2.125rem", height: "2.125rem",
+                    borderRadius: "9999px", flexShrink: 0,
+                    backgroundColor: "#d93025", border: "none",
+                    color: "#fff", display: "flex",
+                    alignItems: "center", justifyContent: "center",
+                    cursor: "pointer",
                   }}
                 >
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
                     <rect x="4" y="4" width="16" height="16" rx="2" />
                   </svg>
-                  Stop
                 </button>
               ) : (
                 <button
                   onClick={listen}
                   disabled={state === "thinking"}
+                  aria-label="Start voice input"
                   style={{
-                    flex: 1, padding: "0.625rem", borderRadius: "9999px",
-                    backgroundColor: state === "thinking" ? "#f5f5f7" : "#1d1d1f",
-                    color: state === "thinking" ? "#86868b" : "#ffffff",
-                    border: "none", cursor: state === "thinking" ? "default" : "pointer",
-                    fontSize: "0.8125rem", fontWeight: 600,
-                    fontFamily: "var(--font-heading)", display: "flex",
-                    alignItems: "center", justifyContent: "center", gap: "0.375rem",
-                    transition: "background-color 0.2s ease",
+                    width: "2.125rem", height: "2.125rem",
+                    borderRadius: "9999px", flexShrink: 0,
+                    backgroundColor: state === "thinking" ? "#f5f5f7" : "#f5f5f7",
+                    border: "1px solid #d2d2d7",
+                    color: state === "thinking" ? "#d2d2d7" : "#1d1d1f",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    cursor: state === "thinking" ? "default" : "pointer",
+                    transition: "background-color 0.15s ease",
                   }}
+                  onMouseEnter={e => { if (state !== "thinking") (e.currentTarget as HTMLButtonElement).style.backgroundColor = "#e8e8ed"; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = "#f5f5f7"; }}
                 >
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="9" y="3" width="6" height="11" rx="3" />
                     <path d="M5 10a7 7 0 0 0 14 0" />
-                    <line x1="12" y1="19" x2="12" y2="23" /><line x1="8" y1="23" x2="16" y2="23" />
+                    <line x1="12" y1="19" x2="12" y2="23" />
+                    <line x1="8" y1="23" x2="16" y2="23" />
                   </svg>
-                  {state === "thinking" ? "Thinking…" : "Ask a question"}
                 </button>
-              )}
-            </div>
-          )}
+              )
+            )}
+          </div>
         </div>
       )}
     </>
