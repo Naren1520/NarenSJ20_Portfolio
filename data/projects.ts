@@ -403,7 +403,7 @@ export const projectsData: Project[] = [
     tags: ["React", "TypeScript", "Node.js", "Supabase", "Gemini API"],
     link: "https://campus-link-scem.netlify.app/",
     githubUrl: "https://github.com/Naren1520/campuslink.git",
-    image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+    image: "https://m.economictimes.com/thumb/height-450,width-600,imgsize-202187,msid-121854533/navi-mumbais-global-education-hub.jpg",
     featured: true,
   },
   {

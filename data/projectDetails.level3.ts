@@ -948,7 +948,7 @@ self.addEventListener('fetch', (event) => {
       "CampusLink collapses the fragmented digital life of a college — WhatsApp announcements, email chains, scattered portals — into a single, intelligent campus hub that actually works the way students and faculty think.",
     status: "Active",
     role: "Lead Engineer & Architect",
-    heroImage: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1600&q=90",
+    heroImage: "https://m.economictimes.com/thumb/height-450,width-600,imgsize-202187,msid-121854533/navi-mumbais-global-education-hub.jpg",
     problem:
       "Campus communication is broken. Important announcements get buried in 50-message WhatsApp threads. Event registrations are Google Forms shared via screenshots. Faculty post assignments in three different places. Students miss deadlines not because they're careless, but because information is everywhere and nowhere.",
     whyItMatters:
