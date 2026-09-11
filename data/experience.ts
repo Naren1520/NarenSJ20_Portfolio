@@ -91,7 +91,7 @@ export const experienceData: ExperienceEntry[] = [
     ],
   },
 
-  // ── OTHER ─────────────────────────────────────────────────────────────────
+  // ── OTHER 
   {
     id: "opensource",
     organisation: "Open Source Contributions",

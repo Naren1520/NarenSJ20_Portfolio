@@ -143,15 +143,19 @@ export default function ResumePage() {
           border: "1px solid #d2d2d7",
           boxShadow: "0 4px 24px rgba(0,0,0,0.06)",
           backgroundColor: "#f5f5f7",
+          overscrollBehavior: "contain",
+          isolation: "isolate",
         }}>
           <iframe
-            src={`${PDF_URL}#toolbar=1&navpanes=0`}
+            src={`${PDF_URL}#toolbar=1&navpanes=0&scrollbar=0`}
             title="Naren S J — Resume"
             width="100%"
+            loading="lazy"
             style={{
               display: "block",
               height: "clamp(60vh, 80vh, 1100px)",
               border: "none",
+              contain: "strict",
             }}
           />
         </div>
