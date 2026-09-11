@@ -3,6 +3,7 @@ import { experience }     from "@/lib/experience";
 import { education }      from "@/lib/education";
 import { achievements }   from "@/lib/achievements";
 import { certifications } from "@/lib/certifications";
+import PdfViewer          from "@/components/ui/PdfViewer";
 
 const PDF_URL   = "/resume.pdf";
 const NAV_H     = 68;
@@ -134,42 +135,9 @@ export default function ResumePage() {
         </div>
       </div>
 
-      {/* ── PDF embedded directly ────────────────────── */}
+      {/* ── PDF embed ────────────────────────────────── */}
       <div style={{ ...pad, paddingTop: "2.5rem", paddingBottom: "2.5rem", borderBottom: "1px solid #d2d2d7" }}>
-        {/* Card wrapper */}
-        <div style={{
-          borderRadius: "1rem",
-          overflow: "hidden",
-          border: "1px solid #d2d2d7",
-          boxShadow: "0 4px 24px rgba(0,0,0,0.06)",
-          backgroundColor: "#f5f5f7",
-          overscrollBehavior: "contain",
-          isolation: "isolate",
-        }}>
-          <iframe
-            src={`${PDF_URL}#toolbar=1&navpanes=0&scrollbar=0`}
-            title="Naren S J — Resume"
-            width="100%"
-            loading="lazy"
-            style={{
-              display: "block",
-              height: "clamp(60vh, 80vh, 1100px)",
-              border: "none",
-              contain: "strict",
-            }}
-          />
-        </div>
-
-        {/* Fallback message shown only if iframe fails (e.g. iOS Safari) */}
-        <p style={{
-          marginTop: "1rem", fontSize: "0.8125rem",
-          color: "#86868b", textAlign: "center",
-        }}>
-          Can&apos;t see the PDF?{" "}
-          <a href={PDF_URL} download="Naren_SJ_Resume.pdf" style={{ color: "#0066cc", fontWeight: 600 }}>
-            Download it here
-          </a>.
-        </p>
+        <PdfViewer src={PDF_URL} downloadName="Naren_SJ_Resume.pdf" />
       </div>
 
       {/* ── Details sections ─────────────────────────── */}
