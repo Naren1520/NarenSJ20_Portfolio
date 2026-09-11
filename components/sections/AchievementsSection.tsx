@@ -83,7 +83,19 @@ export default function AchievementsSection() {
                 </div>
 
                 <div className="flex items-center gap-3 flex-shrink-0">
-                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-white text-[#1d1d1f] border border-[#d2d2d7]">
+                  <span style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    padding: "0.25rem 0.75rem",
+                    borderRadius: "9999px",
+                    backgroundColor: "#ffffff",
+                    border: "1px solid #d2d2d7",
+                    fontSize: "0.75rem",
+                    fontWeight: 700,
+                    fontFamily: "var(--font-heading)",
+                    color: "#1d1d1f",
+                    whiteSpace: "nowrap",
+                  }}>
                     {a.result}
                   </span>
                   <span className="text-xs font-semibold text-[#86868b]">

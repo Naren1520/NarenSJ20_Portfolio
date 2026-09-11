@@ -16,6 +16,7 @@ export interface ExperienceEntry {
   type: "professional" | "other";
   roles: ExperienceRole[];
   location?: string;
+  website?: string;
 }
 
 // Re-export data so existing component imports keep working

@@ -26,6 +26,7 @@ export const experienceData: ExperienceEntry[] = [
   {
     id: "datavex",
     organisation: "Datavex AI",
+    website: "https://datavex.ai/",
     type: "professional",
     location: "Remote",
     roles: [
@@ -44,6 +45,7 @@ export const experienceData: ExperienceEntry[] = [
   {
     id: "sahynex",
     organisation: "Sahynex Tech Solutions",
+    website: "https://www.sahynex.com/",
     type: "professional",
     location: "India",
     roles: [
@@ -62,6 +64,7 @@ export const experienceData: ExperienceEntry[] = [
   {
     id: "isdc",
     organisation: "ISDC",
+    website: "https://www.isdc.live/",
     type: "professional",
     location: "India",
     roles: [

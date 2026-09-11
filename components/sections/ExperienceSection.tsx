@@ -29,10 +29,17 @@ export default function ExperienceSection() {
 
       {/* Tabs */}
       <div
-        className="flex items-center gap-2 pb-4"
-        style={{ marginBottom: "2.5rem" }}
         role="tablist"
         aria-label="Experience categories"
+        style={{
+          display: "inline-flex",
+          gap: "0.25rem",
+          padding: "0.3125rem",
+          backgroundColor: "#f5f5f7",
+          border: "1px solid #d2d2d7",
+          borderRadius: "9999px",
+          marginBottom: "2.5rem",
+        }}
       >
         {TABS.map((tab) => {
           const active = activeTab === tab;
@@ -42,11 +49,20 @@ export default function ExperienceSection() {
               role="tab"
               aria-selected={active}
               onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 rounded-full text-xs font-semibold transition-all cursor-pointer border ${
-                active
-                  ? "bg-[#1d1d1f] text-white border-[#1d1d1f]"
-                  : "bg-[#f5f5f7] text-[#515154] border-[#d2d2d7] hover:bg-[#e5e5e7]"
-              }`}
+              style={{
+                padding: "0.4375rem 1.125rem",
+                borderRadius: "9999px",
+                fontSize: "0.8125rem",
+                fontWeight: active ? 600 : 500,
+                fontFamily: "var(--font-heading)",
+                color: active ? "#1d1d1f" : "#86868b",
+                backgroundColor: active ? "#ffffff" : "transparent",
+                boxShadow: active ? "0 1px 4px rgba(0,0,0,0.1)" : "none",
+                border: "none",
+                cursor: "pointer",
+                transition: "all 0.15s ease",
+                whiteSpace: "nowrap",
+              }}
             >
               {tab}
             </button>

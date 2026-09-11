@@ -198,10 +198,23 @@ export default function EngineSection() {
         <div className="container-page section-pad">
           <div className="card-lg" style={{ borderRadius: "1.75rem" }}>
             {/* Eyebrow */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-[#d2d2d7]" style={{ marginBottom: "1.5rem" }}>
-              <span className="text-xs font-semibold text-[#1d1d1f] tracking-wide uppercase">
-                Systems Architecture
-              </span>
+            <div style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              padding: "0.3125rem 0.875rem",
+              borderRadius: "9999px",
+              backgroundColor: "#f5f5f7",
+              border: "1px solid #d2d2d7",
+              fontFamily: "var(--font-heading)",
+              fontSize: "0.6875rem",
+              fontWeight: 700,
+              color: "#1d1d1f",
+              letterSpacing: "0.07em",
+              textTransform: "uppercase",
+              marginBottom: "1.5rem",
+            }}>
+              Systems Architecture
             </div>
 
             {/* Headline */}
