@@ -19,10 +19,13 @@ const inter = Inter({
   weight: ["300", "400", "500", "600", "700"],
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://narensj.dev";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://narensj.netlify.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
+  verification: {
+    google: "tHlwl10dW5OpSPP1BXII9bLqkmJu8qyCG_NDUukwhrU",
+  },
   title: "Naren S J — AI Engineer & Software Builder",
   description:
     "Naren S J builds intelligent systems, full-stack software, and engineering experiences across AI, systems programming, and the web.",

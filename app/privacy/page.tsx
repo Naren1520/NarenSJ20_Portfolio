@@ -8,8 +8,8 @@ export const metadata: Metadata = {
 };
 
 const LAST_UPDATED = "September 1, 2026";
-const SITE_URL     = "https://narensj.dev";
-const CONTACT_EMAIL = "narensj.dev@gmail.com";
+const SITE_URL     = "https://narensj.netlify.app";
+const CONTACT_EMAIL = "narensonu1520@gmail.com";
 
 /* ── Shared typography primitives ──────────────────────────── */
 function PageHeading({ children }: { children: React.ReactNode }) {
