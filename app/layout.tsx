@@ -45,9 +45,17 @@ export const metadata: Metadata = {
     "Naren S J",
     "Naren SJ",
     "narensj",
+    "naren",
+    "Naren",
+    "narensj20",
+    "Narensj20",
+    "naren-sj",
+    "NAREN S J",
+    "NAREN SJ",
 
     // ── Roles
     "AI Engineer",
+    "Developer",
     "AI Engineer India",
     "C++ Developer",
     "C++ Expert",
@@ -66,6 +74,15 @@ export const metadata: Metadata = {
     "RAG AI Engineer",
     "High Performance Systems Engineer",
     "Backend Engineer",
+    "System Design",
+    "AI Research",
+    "LLM Engineer",
+    "Generative AI",
+    "AI Solutions",
+    "AI Consulting",
+    "AI Product Development",
+    "Offline Payment Design",
+
 
     // ── Advanced Projects
     "SPManager AI Project Management",
@@ -79,11 +96,12 @@ export const metadata: Metadata = {
     "Vanijya AI Vendor Platform",
     "WAF Transformer Web Application Firewall AI",
     "Student Manager System",
-    "ISDC Innovation Startup Platform",
+    "ISDC  Platform",
     "Aerophilia 2025",
+    "Aerophilia 2026",
 
     // ── Intermediate Projects
-    "TaskMatrix Project Management App",
+    "TaskMatrix Management App",
     "AI Image Generator",
     "AI Assistant Chatbot",
     "NexStock Inventory Management",
@@ -108,6 +126,9 @@ export const metadata: Metadata = {
     "Blockchain Solidity",
     "Socket.IO",
     "FastAPI",
+    "RestAPI",
+    "AI",
+    "LLM RAG",
     "Graph Neural Networks",
     "Portfolio 2026",
   ],
