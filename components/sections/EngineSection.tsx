@@ -14,6 +14,7 @@ export default function EngineSection() {
   const sectionRef  = useRef<HTMLElement>(null);
   const [lockOpen,   setLockOpen]   = useState(false);
   const [unlocked,   setUnlocked]   = useState(false);
+  const [showDark,   setShowDark]   = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -36,6 +37,12 @@ export default function EngineSection() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [lockOpen]);
+
+  // Auto-cycle images every 3s
+  useEffect(() => {
+    const id = setInterval(() => setShowDark((v) => !v), 3000);
+    return () => clearInterval(id);
+  }, []);
 
   const handleUnlock = () => {
     setUnlocked(true);
@@ -235,7 +242,7 @@ export default function EngineSection() {
               <EngineFlowSVG />
             </div>
 
-            {/* Engine screenshot — hover to slide to dark theme */}
+            {/* Engine screenshot — auto-cycles every 10s between light and dark theme */}
             <div
               style={{
                 margin: "0 0 2rem",
@@ -246,49 +253,51 @@ export default function EngineSection() {
                 lineHeight: 0,
                 backgroundColor: "#f5f5f7",
                 position: "relative",
-                cursor: "pointer",
               }}
-              className="engine-screenshot-wrap"
             >
-              {/* Light theme — slides out on hover */}
+              {/* Sizer — keeps container height stable at all times */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/projects/portfolioEngine.png"
+                alt=""
+                aria-hidden="true"
+                style={{ width: "100%", height: "auto", display: "block", visibility: "hidden" }}
+              />
+
+              {/* Light theme */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/projects/portfolioEngine.png"
                 alt="Portfolio Engine — light theme"
-                className="engine-img engine-img-light"
                 style={{
-                  width: "100%", height: "auto",
-                  display: "block", objectFit: "cover",
-                  objectPosition: "top",
-                  position: "relative",
+                  width: "100%", height: "100%",
+                  objectFit: "cover", objectPosition: "top",
+                  position: "absolute", inset: 0,
                   zIndex: 1,
-                  transition: "transform 0.55s cubic-bezier(0.4,0,0.2,1), opacity 0.45s ease",
+                  transition: "opacity 0.7s ease, transform 0.7s ease",
+                  opacity: showDark ? 0 : 1,
+                  transform: showDark ? "translateX(-40px)" : "translateX(0)",
                 }}
-                loading="lazy"
               />
-              {/* Dark theme — slides in on hover */}
+
+              {/* Dark theme */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/projects/portfolioEngine_blacktheme.png"
                 alt="Portfolio Engine — dark theme"
-                className="engine-img engine-img-dark"
                 style={{
                   width: "100%", height: "100%",
-                  display: "block", objectFit: "cover",
-                  objectPosition: "top",
-                  position: "absolute",
-                  inset: 0,
+                  objectFit: "cover", objectPosition: "top",
+                  position: "absolute", inset: 0,
                   zIndex: 2,
-                  transform: "translateX(100%)",
-                  transition: "transform 0.55s cubic-bezier(0.4,0,0.2,1), opacity 0.45s ease",
-                  opacity: 0,
+                  transition: "opacity 0.7s ease, transform 0.7s ease",
+                  opacity: showDark ? 1 : 0,
+                  transform: showDark ? "translateX(0)" : "translateX(40px)",
                 }}
-                loading="lazy"
               />
 
-              {/* Hint pill */}
+              {/* Theme indicator pill */}
               <div
-                className="engine-hint"
                 style={{
                   position: "absolute",
                   bottom: "0.875rem",
@@ -299,39 +308,28 @@ export default function EngineSection() {
                   gap: "0.375rem",
                   padding: "0.3125rem 0.75rem",
                   borderRadius: "9999px",
-                  backgroundColor: "rgba(255,255,255,0.85)",
+                  backgroundColor: showDark ? "rgba(0,0,0,0.6)" : "rgba(255,255,255,0.85)",
                   backdropFilter: "blur(8px)",
-                  border: "1px solid rgba(255,255,255,0.6)",
+                  border: `1px solid ${showDark ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.6)"}`,
                   fontSize: "0.6875rem",
                   fontWeight: 600,
                   fontFamily: "var(--font-heading)",
-                  color: "#1d1d1f",
+                  color: showDark ? "#ffffff" : "#1d1d1f",
                   pointerEvents: "none",
-                  transition: "opacity 0.2s ease",
+                  transition: "all 0.4s ease",
                 }}
               >
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 12h14M12 5l7 7-7 7"/>
-                </svg>
-                Hover for dark theme
+                <span
+                  style={{
+                    width: "6px", height: "6px",
+                    borderRadius: "9999px",
+                    backgroundColor: showDark ? "#a3e635" : "#0066cc",
+                    flexShrink: 0,
+                  }}
+                />
+                {showDark ? "Dark theme" : "Light theme"}
               </div>
             </div>
-
-            <style>{`
-              .engine-screenshot-wrap:hover .engine-img-light {
-                transform: translateX(-100%);
-                opacity: 0;
-              }
-              .engine-screenshot-wrap:hover .engine-img-dark {
-                transform: translateX(0);
-                opacity: 1;
-              }
-              .engine-screenshot-wrap:hover .engine-hint {
-                opacity: 0;
-              }
-            `}</style>
-
             {/* CTA — opens lock overlay */}
             <div style={{ marginTop: "0" }}>
               <button
