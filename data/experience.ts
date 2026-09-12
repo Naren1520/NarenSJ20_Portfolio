@@ -98,7 +98,7 @@ export const experienceData: ExperienceEntry[] = [
     roles: [
       {
         title: "Freelance",
-        dateRange: "Apr 2026 – Aug 2026",
+        dateRange: "April 2026 – August 2026",
         responsibilities: [
           "Developed and delivered full-stack web applications tailored to client specifications.",
           "Translated client requirements into scalable and efficient technical solutions.",
