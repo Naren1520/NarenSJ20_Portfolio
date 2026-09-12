@@ -107,6 +107,7 @@ export default function RootLayout({
     "@type": "Person",
     name: "Naren S J",
     url: siteUrl,
+    image: `${siteUrl}/narensj.png`,
     jobTitle: "AI Engineer & Software Builder",
     description: DESCRIPTION,
     sameAs: [
