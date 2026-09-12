@@ -109,33 +109,134 @@ const KB: { patterns: RegExp[]; answer: string }[] = [
       "Hello! I'm Naren's AI voice assistant. I can tell you about his experience, projects, skills, education, and more. You can also say something like 'show me CRIMSON' and I'll navigate you directly to that project. What would you like to know?",
   },
   {
-    patterns: [/thank|thanks|bye|goodbye/i],
+    patterns: [/thank|thanks|bye|goodbye|see you|that.s all|that.s it|close/i],
     answer:
       "You're welcome! Feel free to explore the portfolio or reach out to Naren directly. Have a great day!",
   },
+  {
+    patterns: [/what can you do|help|commands|what do you know|capabilities|features/i],
+    answer:
+      "I can answer questions about Naren's experience, projects, skills, education, achievements, and contact info. I can also navigate — say 'show me CRIMSON', 'go to resume', 'scroll to contact', 'go back home', or 'open SPManager'. You can type or speak — I understand both.",
+  },
+  {
+    patterns: [/where are you|where is naren|location|city|mangaluru|india/i],
+    answer:
+      "Naren is based in Mangaluru, Karnataka, India. He is open to remote opportunities globally and on-site roles in India.",
+  },
+  {
+    patterns: [/age|old|born|birthday/i],
+    answer:
+      "Naren was born in 2006 and is currently 19 years old. He started building software at age 17.",
+  },
+  {
+    patterns: [/github|open source|repository|repo/i],
+    answer:
+      "Naren's GitHub is github.com/Naren1520. He has 48+ repositories covering AI, full-stack web, systems programming, and blockchain projects.",
+  },
+  {
+    patterns: [/linkedin|social|profile|connect/i],
+    answer:
+      "You can connect with Naren on LinkedIn at linkedin.com/in/narensj20. He's active on GitHub as Naren1520.",
+  },
+  {
+    patterns: [/internship|intern|job offer|opportunity|hire|available|open to work/i],
+    answer:
+      "Naren is open to AI/ML engineering roles, full-stack development positions, and research opportunities. He is available for remote work globally and on-site in India. Contact him at narensonu1520@gmail.com.",
+  },
+  {
+    patterns: [/blockchain|web3|solidity|algorand|smart contract|nft/i],
+    answer:
+      "Naren has built two production blockchain systems. CredChain uses Solidity smart contracts on Ethereum for tamper-proof academic credential verification. WorkFox is a decentralised freelance marketplace on Algorand with smart contract escrow — transaction fees under one cent versus fifty dollars on Ethereum.",
+  },
+  {
+    patterns: [/python|fastapi|machine learning|ml|deep learning|neural/i],
+    answer:
+      "Naren uses Python extensively for AI and ML work — FastAPI for model serving, PyTorch and HuggingFace for model fine-tuning, and custom pipeline engineering. His WAF-Transformer project fine-tuned DistilBERT for security classification. BrainScript is a Python async AI pipeline engine.",
+  },
+  {
+    patterns: [/rust|c\+\+|systems|low level|embedded|votestack/i],
+    answer:
+      "Naren writes systems-level code in C, C++, and Rust. VoteStack is a high-performance C++ voting platform using epoll non-blocking I/O and custom thread pools handling 10,000+ votes per second. His NexStock system uses a C backend with a Node.js API bridge.",
+  },
+  {
+    patterns: [/java|spring boot|traffix/i],
+    answer:
+      "Naren built Traffix AI using Java Spring Boot — a real-time traffic management system that ingests data from 50 road segments every 30 seconds using parallel streams, with WebSocket push to an operator dashboard and Gemini AI for congestion prediction.",
+  },
+  {
+    patterns: [/next\.?js|react|frontend|ui|web dev/i],
+    answer:
+      "Naren's primary frontend stack is Next.js 14 with TypeScript. He has shipped 10+ production Next.js platforms including SPManager, ALMS, CampusLink, CredChain, and this portfolio itself.",
+  },
+  {
+    patterns: [/supabase|postgresql|database|mongodb|redis/i],
+    answer:
+      "Naren works across multiple databases depending on use case. MongoDB for flexible document storage. PostgreSQL for relational data and graph queries using recursive CTEs. Supabase for managed PostgreSQL with Row Level Security. Redis for caching and rate limiting.",
+  },
+  {
+    patterns: [/gemini|openai|llm|gpt|ai model|language model|generative/i],
+    answer:
+      "Naren uses Gemini AI extensively — Gemini 1.5 Pro for complex reasoning tasks and Gemini 1.5 Flash for latency-sensitive use cases. He builds RAG pipelines, structured output prompting with JSON schema validation, and multimodal pipelines combining text and vision.",
+  },
+  {
+    patterns: [/docker|kubernetes|devops|deployment|ci.?cd|vercel|render|railway/i],
+    answer:
+      "Naren deploys primarily on Vercel for Next.js frontends and Render for backend services. He uses Docker for containerisation, GitHub Actions for CI/CD, and has experience with Kubernetes, AWS, and Cloudflare for production infrastructure.",
+  },
 ];
 
-/* ── Section navigation map ─────────────────────────────────── */
-const SECTION_NAV: { patterns: RegExp[]; sectionId: string; label: string }[] = [
-  { patterns: [/experience|work|career/i],   sectionId: "experience",   label: "Experience section" },
+/* ── Section + page navigation map ─────────────────────────── */
+const SECTION_NAV: { patterns: RegExp[]; sectionId: string; label: string; page?: string }[] = [
+  { patterns: [/experience|work|career/i],       sectionId: "experience",      label: "Experience section" },
   { patterns: [/project|work gallery|engineering/i], sectionId: "engineering", label: "Projects section" },
-  { patterns: [/skill|technology|stack/i],   sectionId: "skills",       label: "Skills section" },
-  { patterns: [/education|college|degree/i], sectionId: "education",    label: "Education section" },
-  { patterns: [/achievement|award|hackathon/i], sectionId: "achievements", label: "Achievements section" },
-  { patterns: [/contact|email|reach/i],      sectionId: "contact",      label: "Contact section" },
-  { patterns: [/certification|credential/i], sectionId: "certifications", label: "Certifications section" },
-  { patterns: [/volunteer|volunteering/i],   sectionId: "volunteering", label: "Volunteering section" },
-  { patterns: [/research/i],                 sectionId: "research",     label: "Research section" },
+  { patterns: [/skill|technology|stack/i],        sectionId: "skills",         label: "Skills section" },
+  { patterns: [/education|college|degree/i],      sectionId: "education",      label: "Education section" },
+  { patterns: [/achievement|award|hackathon/i],   sectionId: "achievements",   label: "Achievements section" },
+  { patterns: [/contact|email|reach/i],           sectionId: "contact",        label: "Contact section" },
+  { patterns: [/certification|credential/i],      sectionId: "certifications", label: "Certifications section" },
+  { patterns: [/volunteer|volunteering/i],        sectionId: "volunteering",   label: "Volunteering section" },
+  { patterns: [/research/i],                      sectionId: "research",       label: "Research section" },
+];
+
+/* ── Page navigation map ────────────────────────────────────── */
+const PAGE_NAV: { patterns: RegExp[]; path: string; label: string; answer: string }[] = [
+  {
+    patterns: [
+      /resume page|my resume|view resume|open resume|go to resume|resume|cv|curriculum vitae|download resume|see resume/i,
+    ],
+    path: "/resume",
+    label: "Resume page",
+    answer: "Opening the Resume page now. You can view, download, or open the full PDF there.",
+  },
+  {
+    patterns: [/privacy policy|privacy page|privacy/i],
+    path: "/privacy",
+    label: "Privacy Policy",
+    answer: "Opening the Privacy Policy page.",
+  },
+  {
+    patterns: [/terms of service|terms page|terms and conditions|terms/i],
+    path: "/terms",
+    label: "Terms of Service",
+    answer: "Opening the Terms of Service page.",
+  },
+  {
+    patterns: [
+      /go back|back|home page|main page|portfolio home|go home|back to home|back to portfolio|homepage|take me home|return home|main site/i,
+    ],
+    path: "/",
+    label: "Portfolio home",
+    answer: "Going back to the main portfolio page.",
+  },
 ];
 
 /* ── Project navigation detection ──────────────────────────── */
 function detectProjectNavigation(query: string): { id: string; title: string } | null {
   const lower = query.toLowerCase().trim();
 
-  // Nav triggers — broad, includes spoken variants
-  const hasNavTrigger = /show|open|navigate|go to|goto|take me|display|find|visit|load|launch|see/i.test(query);
+  // Broad nav triggers — all natural speech variants
+  const hasNavTrigger = /\b(show|open|navigate|go to|goto|take me|display|find|visit|load|launch|see|view|bring up|pull up|check out|look at|explore|demo)\b/i.test(query);
 
-  // Score each project
   let bestMatch: { id: string; title: string; score: number } | null = null;
 
   for (const project of projectsData) {
@@ -144,20 +245,15 @@ function detectProjectNavigation(query: string): { id: string; title: string } |
     const idNoSpace  = project.id.replace(/-/g, "");
     let score = 0;
 
-    // Exact full title match
     if (lower.includes(titleLower)) {
       score = titleLower.length * 10;
-    }
-    // Exact ID match (with or without spaces/dashes)
-    else if (
+    } else if (
       lower.includes(idLower) ||
       lower.includes(idNoSpace) ||
       lower.includes(project.id.toLowerCase())
     ) {
       score = idLower.length * 8;
-    }
-    // Word-level — only words > 4 chars to avoid false positives
-    else {
+    } else {
       const words = titleLower.split(/\s+/).filter(w => w.length > 4);
       const matched = words.filter(w => lower.includes(w));
       if (matched.length > 0) {
@@ -171,20 +267,15 @@ function detectProjectNavigation(query: string): { id: string; title: string } |
   }
 
   if (!bestMatch) return null;
-
-  // If nav trigger present, always navigate
-  // If no trigger, only navigate for high-confidence matches (score >= 40)
-  // so "tell me about CRIMSON" navigates, but "skills" doesn't accidentally match
   if (hasNavTrigger || bestMatch.score >= 40) {
     return { id: bestMatch.id, title: bestMatch.title };
   }
-
   return null;
 }
 
 /* ── Section navigation detection ──────────────────────────── */
 function detectSectionNavigation(query: string): { sectionId: string; label: string } | null {
-  const navTriggers = /show|scroll|go to|goto|take me|navigate|open|visit/i;
+  const navTriggers = /\b(show|scroll|go to|goto|take me|navigate|open|visit|jump to|move to|bring me to|see|view)\b/i;
   if (!navTriggers.test(query)) return null;
   for (const s of SECTION_NAV) {
     if (s.patterns.some(p => p.test(query))) return { sectionId: s.sectionId, label: s.label };
@@ -207,12 +298,39 @@ function getProjectAnswer(title: string, id: string): string {
   return `I've navigated you to the ${title} project page. You can explore the full details there.`;
 }
 
+/* ── Dynamic project knowledge — covers all 48 projects ────── */
+function findProjectAnswer(query: string): string | null {
+  const lower = query.toLowerCase();
+  for (const project of projectsData) {
+    const titleLower = project.title.toLowerCase();
+    const idLower    = project.id.replace(/-/g, " ");
+    const idNoSpace  = project.id.replace(/-/g, "");
+    if (
+      lower.includes(titleLower) ||
+      lower.includes(idLower) ||
+      lower.includes(idNoSpace)
+    ) {
+      // Check KB first for rich hand-written answers
+      for (const { patterns, answer } of KB) {
+        if (patterns.some(p => p.test(project.title) || p.test(project.id))) return answer;
+      }
+      // Fallback: auto-generate from projectsData
+      return `${project.title} is a ${project.difficulty.toLowerCase()}-level project. ${project.description} Built with ${project.tags.slice(0, 5).join(", ")}. ${project.link ? `Live at ${project.link}.` : ""} ${project.githubUrl ? "Source code available on GitHub." : ""}`.trim();
+    }
+  }
+  return null;
+}
+
 /* ── General answer ─────────────────────────────────────────── */
 function findAnswer(query: string): string {
+  // Check static KB first
   for (const { patterns, answer } of KB) {
     if (patterns.some(p => p.test(query))) return answer;
   }
-  return "I'm not sure about that. Try asking about Naren's experience, projects, skills, education, or say 'show me CRIMSON' to navigate to a project.";
+  // Check dynamic project KB
+  const projAnswer = findProjectAnswer(query);
+  if (projAnswer) return projAnswer;
+  return "I'm not sure about that. Try asking about experience, projects, skills, education, or say 'show me CRIMSON', 'go to resume', 'go back', or 'what can you do?'";
 }
 
 /* ── Types ──────────────────────────────────────────────────── */
@@ -336,7 +454,18 @@ export default function VoiceAgent() {
         return;
       }
 
-      // 2. Check for section scroll intent
+      // 2. Check for page navigation intent (resume, home, privacy, terms)
+      for (const page of PAGE_NAV) {
+        if (page.patterns.some(p => p.test(q))) {
+          setReply(page.answer);
+          setNavInfo(`Opening ${page.label}…`);
+          speak(page.answer);
+          setTimeout(() => router.push(page.path), 800);
+          return;
+        }
+      }
+
+      // 3. Check for section scroll intent
       const secNav = detectSectionNavigation(q);
       if (secNav) {
         const ans = `Scrolling to the ${secNav.label}.`;
@@ -350,7 +479,7 @@ export default function VoiceAgent() {
         return;
       }
 
-      // 3. General knowledge base answer
+      // 4. General knowledge base answer
       const ans = findAnswer(q);
       setReply(ans);
       speak(ans);
@@ -427,9 +556,11 @@ export default function VoiceAgent() {
     "Introduce Naren",
     "Show me CRIMSON",
     "What are your skills?",
-    "Show me SPManager",
+    "Go to resume",
     "Tell me about experience",
-    "Go to Contact section",
+    "Show me SPManager",
+    "Go to contact",
+    "What can you do?",
   ];
 
   return (
