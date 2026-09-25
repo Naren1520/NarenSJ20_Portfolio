@@ -64,7 +64,7 @@ export const experienceData: ExperienceEntry[] = [
   {
     id: "isdc",
     organisation: "ISDC",
-    website: "https://www.isdc.live/",
+    website: "https://isdc.sahyadri.edu.in",
     type: "professional",
     location: "India",
     roles: [
@@ -108,6 +108,25 @@ export const experienceData: ExperienceEntry[] = [
       },
     ],
   },
+  {
+  id: "research-innovation",
+  organisation: "MINDS Assosciation",
+  website: "https://www.instagram.com/minds_scem/",
+  type: "professional",
+  location: "India",
+  roles: [
+    {
+      title: "Research & Innovation Co-Coordinator",
+      dateRange: "September 2026 – Present",
+      responsibilities: [
+        "Coordinating technical initiatives focused on research, innovation, and student-led projects.",
+        "Supporting teams in developing and refining technical solutions through collaborative problem-solving.",
+        "Facilitating technical discussions, knowledge sharing, and research-oriented activities.",
+        "Contributing to the planning and execution of innovation-driven technical programs and initiatives.",
+      ],
+    },
+  ],
+},
 
   // ── OTHER 
   {

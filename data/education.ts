@@ -16,7 +16,7 @@ export const educationData: EducationEntry[] = [
     id: "puc",
     institution: "KVG Amarajyothi PU College",
     degree: "Pre-University Course (PUC)",
-    fieldOfStudy: "Science — Physics, Chemistry, Mathematics, Computer Science",
+    fieldOfStudy: "Science — Physics, Chemistry, Mathematics, Biology",
     startYear: 2022,
     endYear: 2024,
     grade: "94%",

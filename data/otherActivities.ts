@@ -44,4 +44,13 @@ export const otherActivitiesData: OtherActivity[] = [
     description:
       "Delivered a storytelling session on radio, engaging listeners through narrative-driven communication and demonstrating public speaking, creativity, and audience engagement.",
   },
+  {
+    id: "Panel Member",
+    title: "Paper presentation Panel Member",
+    status: "Panel Discussion",
+    organisation: "IEEE-SCEM",
+    image: "/otheractivities/paneldiscussion.jpg",
+    description:
+      "Shared my IEEE experiences and insights at ANVESH ’26, engaging participants in discussions on IEEE opportunities while demonstrating public speaking, and technical communication.",
+  },
 ];
